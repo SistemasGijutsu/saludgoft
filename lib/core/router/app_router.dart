@@ -8,6 +8,10 @@ import '../../features/auth/presentation/pages/register_selection_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/patient/presentation/pages/patient_home_page.dart';
 import '../../features/doctor/presentation/pages/doctor_home_page.dart';
+import '../../features/doctor/presentation/pages/doctor_specialty_selection_page.dart';
+import '../../features/doctor/presentation/pages/doctor_register_info_page.dart';
+import '../../features/doctor/presentation/pages/doctor_register_documents_page.dart';
+import '../../features/auth/domain/models/specialty.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
@@ -16,10 +20,16 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: '/',
     redirect: (context, state) {
       final isAuthenticated = authState.isAuthenticated;
-      final isAuthRoute = state.matchedLocation == '/' ||
-          state.matchedLocation == '/login' ||
-          state.matchedLocation == '/register-selection' ||
-          state.matchedLocation.startsWith('/register');
+      final location = state.matchedLocation;
+      
+      // Rutas públicas de autenticación y registro
+      final isAuthRoute = location == '/' ||
+          location == '/login' ||
+          location == '/register-selection' ||
+          location.startsWith('/register') ||
+          location == '/doctor/select-specialty' ||
+          location == '/doctor/register-info' ||
+          location == '/doctor/register-documents';
 
       // Si está autenticado y trata de ir a rutas de auth, redirigir a su home
       if (isAuthenticated && isAuthRoute) {
@@ -63,6 +73,27 @@ final routerProvider = Provider<GoRouter>((ref) {
           final role = state.uri.queryParameters['role'] ?? 'patient';
           return RegisterPage(role: role);
         },
+      ),
+      
+      // Ruta de selección de especialidad (médico)
+      GoRoute(
+        path: '/doctor/select-specialty',
+        builder: (context, state) => const DoctorSpecialtySelectionPage(),
+      ),
+      
+      // Ruta de información profesional (médico)
+      GoRoute(
+        path: '/doctor/register-info',
+        builder: (context, state) {
+          final specialty = state.extra as Specialty;
+          return DoctorRegisterInfoPage(specialty: specialty);
+        },
+      ),
+      
+      // Ruta de documentos (médico)
+      GoRoute(
+        path: '/doctor/register-documents',
+        builder: (context, state) => const DoctorRegisterDocumentsPage(),
       ),
       
       // Rutas de paciente

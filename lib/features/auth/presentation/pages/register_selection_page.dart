@@ -65,7 +65,7 @@ class RegisterSelectionPage extends StatelessWidget {
                 description: 'Quiero ofrecer mis servicios médicos profesionales',
                 color: AppColors.secondary,
                 onTap: () {
-                  context.push('/register?role=doctor');
+                  context.push('/doctor/select-specialty');
                 },
               ),
               
