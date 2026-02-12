@@ -8,47 +8,33 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-                            // Logo
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    // Logo de SaludGo
-                    Image.asset(
-                      'assets/images/logo.png',
-                      height: 120,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        // Si no encuentra el logo, muestra el icono placeholder
-                        return const Icon(
-                          Icons.local_hospital,
-                          size: 80,
-                          color: AppColors.primary,
-                        );
-                      },
-                    ),
-                  ],
-                ),
+              const Spacer(),
+              
+              // Logo
+              Image.asset(
+                'assets/images/logo.png',
+                height: 200,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  // Si no encuentra el logo, muestra el icono placeholder
+                  return const Icon(
+                    Icons.local_hospital,
+                    size: 120,
+                    color: AppColors.primary,
+                  );
+                },
               ),
-                            // Botón Regístrate
+              
+              const Spacer(),
+              
+              // Botón Regístrate
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -77,9 +63,6 @@ class WelcomePage extends StatelessWidget {
                   ),
                 ),
               ),
-
-              
-
               
               const SizedBox(height: 32),
             ],
