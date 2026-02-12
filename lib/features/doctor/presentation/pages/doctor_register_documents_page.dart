@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/background_scaffold.dart';
 
 class DoctorRegisterDocumentsPage extends StatefulWidget {
   const DoctorRegisterDocumentsPage({super.key});
@@ -21,8 +22,7 @@ class _DoctorRegisterDocumentsPageState extends State<DoctorRegisterDocumentsPag
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFE8EEF2),
+    return BackgroundScaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.close),

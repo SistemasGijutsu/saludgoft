@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/background_scaffold.dart';
 import '../../../auth/domain/models/specialty.dart';
 
 class DoctorSpecialtySelectionPage extends StatefulWidget {
@@ -16,8 +17,7 @@ class _DoctorSpecialtySelectionPageState extends State<DoctorSpecialtySelectionP
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return BackgroundScaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

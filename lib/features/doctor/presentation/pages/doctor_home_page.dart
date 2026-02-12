@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/background_scaffold.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 
 class DoctorHomePage extends ConsumerWidget {
@@ -12,7 +13,7 @@ class DoctorHomePage extends ConsumerWidget {
     final authState = ref.watch(authProvider);
     final user = authState.user;
 
-    return Scaffold(
+    return BackgroundScaffold(
       appBar: AppBar(
         title: const Text('SaludGo - Médico'),
         actions: [
