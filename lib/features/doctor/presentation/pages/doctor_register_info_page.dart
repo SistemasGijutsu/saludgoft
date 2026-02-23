@@ -1,10 +1,14 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/background_scaffold.dart';
+import '../../../../core/utils/image_picker_helper.dart';
 import '../../../auth/domain/models/specialty.dart';
+import '../providers/doctor_registration_provider.dart';
 
-class DoctorRegisterInfoPage extends StatefulWidget {
+class DoctorRegisterInfoPage extends ConsumerStatefulWidget {
   final Specialty specialty;
   
   const DoctorRegisterInfoPage({
@@ -13,10 +17,10 @@ class DoctorRegisterInfoPage extends StatefulWidget {
   });
 
   @override
-  State<DoctorRegisterInfoPage> createState() => _DoctorRegisterInfoPageState();
+  ConsumerState<DoctorRegisterInfoPage> createState() => _DoctorRegisterInfoPageState();
 }
 
-class _DoctorRegisterInfoPageState extends State<DoctorRegisterInfoPage> {
+class _DoctorRegisterInfoPageState extends ConsumerState<DoctorRegisterInfoPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _dniController = TextEditingController();
@@ -29,6 +33,7 @@ class _DoctorRegisterInfoPageState extends State<DoctorRegisterInfoPage> {
   String _selectedTransport = 'Motocicleta';
   bool _acceptTerms = false;
   bool _obscurePassword = true;
+  File? _profileImage;
 
   @override
   void dispose() {
@@ -89,32 +94,45 @@ class _DoctorRegisterInfoPageState extends State<DoctorRegisterInfoPage> {
               Center(
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey.shade300,
-                      child: Icon(
-                        Icons.camera_alt,
-                        size: 40,
-                        color: Colors.grey.shade600,
+                    GestureDetector(
+                      onTap: () async {
+                        final file = await ImagePickerHelper.showImageSourceDialog(context);
+                        if (file != null) {
+                          setState(() {
+                            _profileImage = file;
+                          });
+                        }
+                      },
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey.shade300,
+                        backgroundImage: _profileImage != null 
+                            ? FileImage(_profileImage!) 
+                            : null,
+                        child: _profileImage == null
+                            ? Icon(
+                                Icons.camera_alt,
+                                size: 40,
+                                color: Colors.grey.shade600,
+                              )
+                            : null,
                       ),
                     ),
                     const SizedBox(height: 8),
                     TextButton(
-                      onPressed: () {
-                        // TODO: Abrir cámara o galería
+                      onPressed: () async {
+                        final file = await ImagePickerHelper.showImageSourceDialog(context);
+                        if (file != null) {
+                          setState(() {
+                            _profileImage = file;
+                          });
+                        }
                       },
-                      child: const Text(
-                        'Toca para agregar foto',
-                        style: TextStyle(color: AppColors.primary),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // TODO: Abrir cámara
-                      },
-                      child: const Text(
-                        'Toca Foto',
-                        style: TextStyle(color: AppColors.textSecondary),
+                      child: Text(
+                        _profileImage == null 
+                            ? 'Toca para agregar foto' 
+                            : 'Cambiar foto',
+                        style: const TextStyle(color: AppColors.primary),
                       ),
                     ),
                   ],
@@ -205,7 +223,7 @@ class _DoctorRegisterInfoPageState extends State<DoctorRegisterInfoPage> {
                         ),
                         const SizedBox(height: 8),
                         DropdownButtonFormField<String>(
-                          value: _selectedGender,
+                          initialValue: _selectedGender,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.white,
@@ -456,6 +474,20 @@ class _DoctorRegisterInfoPageState extends State<DoctorRegisterInfoPage> {
                   onPressed: _acceptTerms
                       ? () {
                           if (_formKey.currentState!.validate()) {
+                            // Guardar información en el provider
+                            ref.read(doctorRegistrationProvider.notifier).setPersonalInfo(
+                              nombre: _nameController.text,
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                              dni: _dniController.text,
+                              edad: int.tryParse(_ageController.text) ?? 0,
+                              genero: _selectedGender.toLowerCase(),
+                              telefono: _phoneController.text,
+                              ciudad: '',
+                              medioTransporte: _selectedTransport,
+                              fotoPerfil: _profileImage,
+                            );
+                            ref.read(doctorRegistrationProvider.notifier).setSpecialty(widget.specialty);
                             // Navegar a la página de documentos
                             context.push('/doctor/register-documents');
                           }

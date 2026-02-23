@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/constants/api_constants.dart';
-import '../../domain/models/user.dart';
+import '../../models/auth_models.dart';
 
 class AuthRepository {
   final Dio _dio = DioClient.dio;
@@ -22,7 +22,7 @@ class AuthRepository {
 
       if (response.statusCode == 200) {
         return {
-          'user': User.fromJson(response.data['user']),
+          'user': UserData.fromJson(response.data['user']),
           'token': response.data['token'] as String,
         };
       } else {
@@ -61,7 +61,7 @@ class AuthRepository {
 
       if (response.statusCode == 201) {
         return {
-          'user': User.fromJson(response.data['user']),
+          'user': UserData.fromJson(response.data['user']),
           'token': response.data['token'] as String,
         };
       } else {
@@ -70,6 +70,33 @@ class AuthRepository {
     } on DioException catch (e) {
       if (e.response != null) {
         throw Exception(e.response!.data['message'] ?? 'Error en el registro');
+      } else {
+        throw Exception('Error de conexión con el servidor');
+      }
+    }
+  }
+
+  // Register Doctor
+  Future<Map<String, dynamic>> registerDoctor(DoctorRegisterRequest request) async {
+    try {
+      final response = await _dio.post(
+        ApiConstants.registerDoctor,
+        data: request.toJson(),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return {
+          'user': UserData.fromJson(response.data['user']),
+          'token': response.data['token'] as String,
+        };
+      } else {
+        throw Exception('Error en el registro del médico');
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final data = e.response!.data;
+        final errorMessage = data is Map ? (data['error'] ?? data[' message'] ?? 'Error en el registro') : 'Error en el registro';
+        throw Exception(errorMessage);
       } else {
         throw Exception('Error de conexión con el servidor');
       }
@@ -91,7 +118,7 @@ class AuthRepository {
   }
 
   // Verificar token
-  Future<User> verifyToken(String token) async {
+  Future<UserData> verifyToken(String token) async {
     try {
       final response = await _dio.get(
         ApiConstants.profile,
@@ -101,7 +128,7 @@ class AuthRepository {
       );
 
       if (response.statusCode == 200) {
-        return User.fromJson(response.data['user']);
+        return UserData.fromJson(response.data['user']);
       } else {
         throw Exception('Token inválido');
       }

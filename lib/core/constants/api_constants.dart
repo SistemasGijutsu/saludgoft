@@ -1,14 +1,15 @@
 class ApiConstants {
   // Cambia esto por la IP de tu PC cuando pruebes en celular real
-  static const String baseUrlEmulator = 'http://10.0.2.2:8000/api';
-  static const String baseUrlIOS = 'http://localhost:8000/api';
+  static const String baseUrlEmulator = 'http://10.0.2.2:8080/saludgoft/saludgo-backend/public/api';
+  static const String baseUrlIOS = 'http://localhost:8080/saludgoft/saludgo-backend/public/api';
   
-  // Ejemplo: static const String baseUrlReal = 'http://192.168.1.100:8000/api';
-  static const String baseUrlReal = 'http://TU_IP_AQUI:8000/api';
+  // Ejemplo: static const String baseUrlReal = 'http://192.168.1.100:8080/saludgoft/saludgo-backend/public/api';
+  static const String baseUrlReal = 'http://TU_IP_AQUI:8080/saludgoft/saludgo-backend/public/api';
 
   // Endpoints
   static const String login = '/auth/login';
   static const String register = '/auth/register';
+  static const String registerDoctor = '/register/doctor';
   static const String logout = '/auth/logout';
   
   // Patient endpoints

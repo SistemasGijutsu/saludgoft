@@ -50,7 +50,7 @@ class PatientHomePage extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '¡Hola, ${user?.name ?? "Usuario"}!',
+                            '¡Hola, ${user?.nombre ?? "Usuario"}!',
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,

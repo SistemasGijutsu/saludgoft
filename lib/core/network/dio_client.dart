@@ -8,10 +8,10 @@ class DioClient {
     
     _dio = Dio(
       BaseOptions(
-        // Para celular real: usa la IP de tu PC (ej: 192.168.1.100:8000)
+        // Para celular real: usa la IP de tu PC (ej: 192.168.1.100:8080)
         // Para emulador Android: usa 10.0.2.2
         // Para emulador iOS: usa localhost
-        baseUrl: 'http://10.0.2.2:8000/api',
+        baseUrl: 'http://10.0.2.2:8080/saludgoft/saludgo-backend/public/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {

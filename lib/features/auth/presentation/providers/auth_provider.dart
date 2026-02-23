@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../domain/models/auth_state.dart';
+import '../../models/auth_models.dart';
 
 // Provider del repositorio
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -86,6 +87,24 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = AuthState.authenticated(result['user'], result['token']);
     } catch (e) {
       state = AuthState.error(e.toString().replaceAll('Exception: ', ''));
+    }
+  }
+
+  // Register Doctor
+  Future<void> registerDoctor(DoctorRegisterRequest request) async {
+    try {
+      state = AuthState.loading();
+
+      final result = await _repository.registerDoctor(request);
+
+      // Guardar token en SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', result['token']);
+
+      state = AuthState.authenticated(result['user'], result['token']);
+    } catch (e) {
+      state = AuthState.error(e.toString().replaceAll('Exception: ', ''));
+      rethrow;
     }
   }
 

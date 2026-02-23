@@ -12,6 +12,7 @@ import '../../features/doctor/presentation/pages/doctor_specialty_selection_page
 import '../../features/doctor/presentation/pages/doctor_register_info_page.dart';
 import '../../features/doctor/presentation/pages/doctor_register_documents_page.dart';
 import '../../features/auth/domain/models/specialty.dart';
+import '../../features/auth/screens/test_backend_connection.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
@@ -29,7 +30,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           location.startsWith('/register') ||
           location == '/doctor/select-specialty' ||
           location == '/doctor/register-info' ||
-          location == '/doctor/register-documents';
+          location == '/doctor/register-documents' ||
+          location == '/test';
 
       // Si está autenticado y trata de ir a rutas de auth, redirigir a su home
       if (isAuthenticated && isAuthRoute) {
@@ -48,6 +50,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null; // No redirigir
     },
     routes: [
+      // Ruta de prueba de backend
+      GoRoute(
+        path: '/test',
+        builder: (context, state) => const TestBackendConnection(),
+      ),
+      
       // Ruta de bienvenida
       GoRoute(
         path: '/',

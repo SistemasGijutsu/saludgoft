@@ -18,11 +18,11 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'] as int,
-      name: json['name'] as String,
+      name: json['nombre'] as String, // Backend usa 'nombre'
       email: json['email'] as String,
-      role: json['role'] as String,
-      phone: json['phone'] as String?,
-      avatar: json['avatar'] as String?,
+      role: json['rol'] as String, // Backend usa 'rol'
+      phone: json['telefono'] as String?, // Backend usa 'telefono'
+      avatar: json['foto_perfil'] as String?, // Backend usa 'foto_perfil'
     );
   }
 
@@ -37,6 +37,6 @@ class User {
     };
   }
 
-  bool get isPatient => role == 'patient';
-  bool get isDoctor => role == 'doctor';
+  bool get isPatient => role == 'paciente';
+  bool get isDoctor => role == 'profesional';
 }

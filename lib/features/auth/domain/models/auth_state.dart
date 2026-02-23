@@ -1,7 +1,7 @@
-import '../models/user.dart';
+import '../../models/auth_models.dart';
 
 class AuthState {
-  final User? user;
+  final UserData? user;
   final String? token;
   final bool isLoading;
   final String? error;
@@ -16,7 +16,7 @@ class AuthState {
   });
 
   AuthState copyWith({
-    User? user,
+    UserData? user,
     String? token,
     bool? isLoading,
     String? error,
@@ -42,7 +42,7 @@ class AuthState {
   }
 
   // Estado autenticado
-  factory AuthState.authenticated(User user, String token) {
+  factory AuthState.authenticated(UserData user, String token) {
     return AuthState(
       user: user,
       token: token,
