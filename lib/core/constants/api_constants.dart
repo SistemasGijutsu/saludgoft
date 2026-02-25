@@ -7,10 +7,10 @@ class ApiConstants {
   static const String baseUrlReal = 'http://TU_IP_AQUI:8080/saludgoft/saludgo-backend/public/api';
 
   // Endpoints
-  static const String login = '/auth/login';
-  static const String register = '/auth/register';
+  static const String login = '/login';
+  static const String register = '/register/patient';
   static const String registerDoctor = '/register/doctor';
-  static const String logout = '/auth/logout';
+  static const String logout = '/logout';
   
   // Patient endpoints
   static const String serviceRequests = '/service-requests';
@@ -22,5 +22,5 @@ class ApiConstants {
   
   // Common endpoints
   static const String specialties = '/specialties';
-  static const String profile = '/profile';
+  static const String profile = '/me';
 }
