@@ -15,11 +15,13 @@ import '../../features/auth/domain/models/specialty.dart';
 import '../../features/auth/screens/test_backend_connection.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authProvider);
-
-  return GoRouter(
+  // El GoRouter se crea UNA sola vez. No usar ref.watch aquí porque
+  // recrearía el router completo en cada cambio de auth (causa pantalla negra).
+  final router = GoRouter(
     initialLocation: '/',
     redirect: (context, state) {
+      // ref.read no produce rebuilds del router
+      final authState = ref.read(authProvider);
       final isAuthenticated = authState.isAuthenticated;
       final location = state.matchedLocation;
       
@@ -137,4 +139,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ),
   );
+
+  // Escuchar cambios de auth para refrescar SOLO el redirect, sin recrear el router
+  ref.listen(authProvider, (previous, next) {
+    if (previous?.isAuthenticated != next.isAuthenticated) {
+      router.refresh();
+    }
+  });
+
+  return router;
 });

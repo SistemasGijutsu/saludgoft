@@ -28,14 +28,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final token = prefs.getString('token');
 
       if (token != null) {
-        state = AuthState.loading();
+        // No emitir loading aquí: causaría que routerProvider
+        // detecte cambio y llame router.refresh() antes de que
+        // el usuario esté autenticado, produciendo pantalla negra.
         final user = await _repository.verifyToken(token);
         state = AuthState.authenticated(user, token);
       }
     } catch (e) {
       // Si el token no es válido, limpiar la sesión
       await _clearSession();
-      state = AuthState.initial();
+      // No cambiar state: ya está en AuthState.initial() desde el constructor
     }
   }
 
