@@ -24,252 +24,312 @@ class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
-        ),
-        title: const Text(
-          'SaludGo Doctor',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
       drawer: _buildDrawer(context, user),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Mensaje de solicitudes
-              Text(
-                'Hay ${availabilityState.pendingRequests} solicitudes de consulta, activa tu disponibilidad para verlas',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w500,
+      body: Stack(
+        children: [
+          // Fondo con patrón de iconos médicos
+          const _MedicalIconsBackground(),
+
+          // Contenido principal
+          SafeArea(
+            child: Column(
+              children: [
+                // ── Barra superior: hamburguesa + toggle disponibilidad ──
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Row(
+                    children: [
+                      // Botón hamburguesa circular
+                      GestureDetector(
+                        onTap: () =>
+                            _scaffoldKey.currentState?.openDrawer(),
+                        child: Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.menu,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                        ),
+                      ),
+
+                      const Spacer(),
+
+                      // Toggle disponibilidad (píldora animada)
+                      GestureDetector(
+                        onTap: () => ref
+                            .read(doctorAvailabilityProvider.notifier)
+                            .toggleAvailability(),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 9),
+                          decoration: BoxDecoration(
+                            color: availabilityState.isAvailable
+                                ? AppColors.success
+                                : const Color(0xFF9E9E9E),
+                            borderRadius: BorderRadius.circular(22),
+                            boxShadow: [
+                              BoxShadow(
+                                color: (availabilityState.isAvailable
+                                        ? AppColors.success
+                                        : Colors.grey)
+                                    .withOpacity(0.35),
+                                blurRadius: 6,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                availabilityState.isAvailable
+                                    ? 'Disponible'
+                                    : 'No disponible',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              
-              const SizedBox(height: 32),
-              
-              // Toggle de disponibilidad
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                decoration: BoxDecoration(
-                  color: availabilityState.isAvailable 
-                      ? AppColors.success.withOpacity(0.2) 
-                      : AppColors.textSecondary.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      availabilityState.isAvailable ? 'Disponible' : 'No disponible',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: availabilityState.isAvailable 
-                            ? AppColors.success 
-                            : AppColors.textSecondary,
+
+                // ── Mensaje central ──
+                Expanded(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 36),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Hay ${availabilityState.pendingRequests} solicitudes de consulta, activa tu disponibilidad para verlas',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                              height: 1.45,
+                            ),
+                          ),
+
+                          if (availabilityState.isAvailable) ...[
+                            const SizedBox(height: 40),
+                            ElevatedButton(
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Ver solicitudes (próximamente)'),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 44, vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                elevation: 4,
+                              ),
+                              child: const Text(
+                                'Ver Solicitudes',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Switch(
-                      value: availabilityState.isAvailable,
-                      onChanged: (value) {
-                        ref.read(doctorAvailabilityProvider.notifier).toggleAvailability();
-                      },
-                      activeColor: AppColors.success,
-                    ),
-                  ],
-                ),
-              ),
-              
-              const SizedBox(height: 40),
-              
-              // Botón para ver solicitudes (solo si está disponible)
-              if (availabilityState.isAvailable)
-                ElevatedButton(
-                  onPressed: () {
-                    // TODO: Navegar a solicitudes
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Función: Ver solicitudes (próximamente)'),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Ver Solicitudes',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildDrawer(BuildContext context, user) {
+  // ─── Drawer estilo InDriver ─────────────────────────────────────────────
+
+  Widget _buildDrawer(BuildContext context, dynamic user) {
     return Drawer(
+      width: MediaQuery.of(context).size.width * 0.82,
       child: Container(
         color: AppColors.primary,
         child: Column(
           children: [
-            // Header con foto y datos del doctor
+            // ── Header del doctor ──
             Container(
-              padding: const EdgeInsets.only(top: 60, bottom: 20),
+              width: double.infinity,
+              padding: const EdgeInsets.only(
+                  top: 56, bottom: 24, left: 20, right: 20),
               child: Column(
                 children: [
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person,
-                      size: 50,
-                      color: AppColors.primary,
+                  // Avatar circular con borde blanco
+                  Container(
+                    width: 88,
+                    height: 88,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 3),
+                    ),
+                    child: const CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.person,
+                        size: 54,
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    user?.nombre?.toUpperCase() ?? 'DOCTOR',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+
+                  const SizedBox(height: 14),
+
+                  // Nombre + ícono verificado
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ...List.generate(4, (index) => const Icon(
-                        Icons.star,
-                        color: Colors.white,
-                        size: 20,
-                      )),
+                      Flexible(
+                        child: Text(
+                          (user?.nombre?.toUpperCase() ?? 'DOCTOR'),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.8,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      const Icon(Icons.verified,
+                          color: Colors.white, size: 18),
                     ],
                   ),
-                  const SizedBox(height: 4),
+
+                  const SizedBox(height: 5),
+
+                  // Consultas atendidas
                   Text(
-                    user?.email ?? '',
+                    '${ref.watch(doctorAvailabilityProvider).pendingRequests} Consultas atendidas',
                     style: const TextStyle(
                       color: Colors.white70,
-                      fontSize: 12,
+                      fontSize: 13,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // Estrellas
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      5,
+                      (i) => Icon(
+                        i < 4 ? Icons.star : Icons.star_half,
+                        color: Colors.white,
+                        size: 22,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            
-            // Opciones del menú
+
+            // ── Panel blanco con opciones de menú ──
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
+                    topLeft: Radius.circular(28),
+                    topRight: Radius.circular(28),
                   ),
                 ),
                 child: ListView(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                   children: [
-                    _buildMenuItem(
-                      icon: Icons.person,
+                    _menuItem(
+                      icon: Icons.person_outline,
                       title: 'MI PERFIL',
-                      onTap: () {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Función: Mi Perfil (próximamente)')),
-                        );
-                      },
+                      onTap: () => _onMenuTap(context, 'Mi Perfil'),
                     ),
-                    _buildMenuItem(
-                      icon: Icons.location_on,
+                    _menuItem(
+                      icon: Icons.location_on_outlined,
                       title: 'CIUDAD',
-                      onTap: () {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Función: Ciudad (próximamente)')),
-                        );
-                      },
+                      onTap: () => _onMenuTap(context, 'Ciudad'),
                     ),
-                    _buildMenuItem(
-                      icon: Icons.payment,
+                    _menuItem(
+                      icon: Icons.credit_card_outlined,
                       title: 'RECARGA',
-                      onTap: () {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Función: Recarga (próximamente)')),
-                        );
-                      },
+                      onTap: () => _onMenuTap(context, 'Recarga'),
                     ),
-                    _buildMenuItem(
+                    _menuItem(
                       icon: Icons.history,
                       title: 'CONSULTAS REALIZADAS',
-                      onTap: () {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Función: Consultas realizadas (próximamente)')),
-                        );
-                      },
+                      onTap: () =>
+                          _onMenuTap(context, 'Consultas realizadas'),
                     ),
-                    _buildMenuItem(
+                    _menuItem(
                       icon: Icons.search,
                       title: 'SABER MÁS SOBRE SALUDGO',
-                      onTap: () {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Función: Saber más (próximamente)')),
-                        );
-                      },
+                      onTap: () => _onMenuTap(context, 'Saber más'),
                     ),
-                    _buildMenuItem(
-                      icon: Icons.security,
+                    _menuItem(
+                      icon: Icons.shield_outlined,
                       title: 'SEGURIDAD',
-                      onTap: () {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Función: Seguridad (próximamente)')),
-                        );
-                      },
+                      onTap: () => _onMenuTap(context, 'Seguridad'),
                     ),
-                    _buildMenuItem(
-                      icon: Icons.help,
+                    _menuItem(
+                      icon: Icons.warning_amber_outlined,
                       title: 'NECESITO AYUDA',
-                      onTap: () {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Función: Ayuda (próximamente)')),
-                        );
-                      },
+                      onTap: () => _onMenuTap(context, 'Necesito ayuda'),
                     ),
-                    const Divider(height: 1),
-                    _buildMenuItem(
+                    const Divider(
+                        height: 24, indent: 16, endIndent: 16),
+                    _menuItem(
                       icon: Icons.logout,
                       title: 'CERRAR SESIÓN',
                       textColor: Colors.red,
                       onTap: () async {
                         Navigator.pop(context);
                         await ref.read(authProvider.notifier).logout();
-                        if (context.mounted) {
-                          context.go('/');
-                        }
+                        if (context.mounted) context.go('/');
                       },
                     ),
                   ],
@@ -282,23 +342,129 @@ class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
     );
   }
 
-  Widget _buildMenuItem({
+  void _onMenuTap(BuildContext context, String name) {
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('$name (próximamente)')),
+    );
+  }
+
+  Widget _menuItem({
     required IconData icon,
     required String title,
     required VoidCallback onTap,
     Color? textColor,
   }) {
-    return ListTile(
-      leading: Icon(icon, color: textColor ?? AppColors.primary),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: textColor ?? AppColors.textPrimary,
-          fontWeight: FontWeight.w600,
-          fontSize: 14,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          padding:
+              const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+          decoration: BoxDecoration(
+            border:
+                Border.all(color: const Color(0xFFE0EAF4), width: 1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: textColor ?? AppColors.primary,
+                size: 22,
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: textColor ?? AppColors.primary,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      onTap: onTap,
     );
   }
+}
+
+// ─── Fondo con patrón de iconos médicos ────────────────────────────────────
+
+class _MedicalIconsBackground extends StatelessWidget {
+  const _MedicalIconsBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: CustomPaint(
+        painter: _MedicalPatternPainter(),
+      ),
+    );
+  }
+}
+
+class _MedicalPatternPainter extends CustomPainter {
+  static const List<_IconEntry> _icons = [
+    _IconEntry(Icons.local_hospital, 0.08, 0.07),
+    _IconEntry(Icons.favorite_border, 0.38, 0.04),
+    _IconEntry(Icons.medical_services_outlined, 0.70, 0.10),
+    _IconEntry(Icons.monitor_heart_outlined, 0.90, 0.06),
+    _IconEntry(Icons.healing, 0.15, 0.22),
+    _IconEntry(Icons.vaccines_outlined, 0.62, 0.18),
+    _IconEntry(Icons.medication_outlined, 0.84, 0.26),
+    _IconEntry(Icons.biotech_outlined, 0.04, 0.38),
+    _IconEntry(Icons.psychology_outlined, 0.46, 0.33),
+    _IconEntry(Icons.medical_information_outlined, 0.76, 0.43),
+    _IconEntry(Icons.science_outlined, 0.22, 0.52),
+    _IconEntry(Icons.health_and_safety_outlined, 0.93, 0.56),
+    _IconEntry(Icons.local_pharmacy_outlined, 0.10, 0.66),
+    _IconEntry(Icons.bloodtype_outlined, 0.52, 0.61),
+    _IconEntry(Icons.emergency_outlined, 0.80, 0.69),
+    _IconEntry(Icons.coronavirus_outlined, 0.30, 0.76),
+    _IconEntry(Icons.monitor_outlined, 0.66, 0.81),
+    _IconEntry(Icons.air_outlined, 0.05, 0.86),
+    _IconEntry(Icons.sanitizer_outlined, 0.43, 0.89),
+    _IconEntry(Icons.thermostat, 0.89, 0.89),
+    _IconEntry(Icons.local_hospital, 0.56, 0.96),
+    _IconEntry(Icons.favorite_border, 0.20, 0.96),
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (final entry in _icons) {
+      final x = entry.relX * size.width;
+      final y = entry.relY * size.height;
+      final tp = TextPainter(textDirection: TextDirection.ltr)
+        ..text = TextSpan(
+          text: String.fromCharCode(entry.icon.codePoint),
+          style: TextStyle(
+            fontSize: 38,
+            fontFamily: entry.icon.fontFamily,
+            package: entry.icon.fontPackage,
+            color: AppColors.primary.withOpacity(0.08),
+          ),
+        )
+        ..layout();
+      tp.paint(canvas, Offset(x - tp.width / 2, y - tp.height / 2));
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _IconEntry {
+  final IconData icon;
+  final double relX;
+  final double relY;
+
+  const _IconEntry(this.icon, this.relX, this.relY);
 }
