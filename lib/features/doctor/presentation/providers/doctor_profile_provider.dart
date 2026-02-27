@@ -81,12 +81,14 @@ class DoctorProfileNotifier extends StateNotifier<DoctorProfileState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      await _repository.updateDoctorProfile(
+      final response = await _repository.updateDoctorProfile(
         userId: user.id,
         nombre: nombre,
         email: email,
         ciudad: ciudad,
       );
+
+      print('Respuesta del backend: $response');
 
       // Actualizar el usuario en el auth provider
       if (nombre != null || email != null || ciudad != null) {
@@ -100,6 +102,7 @@ class DoctorProfileNotifier extends StateNotifier<DoctorProfileState> {
       state = state.copyWith(isLoading: false);
       return true;
     } catch (e) {
+      print('Error en updateProfile: $e');
       state = state.copyWith(
         error: e.toString(),
         isLoading: false,

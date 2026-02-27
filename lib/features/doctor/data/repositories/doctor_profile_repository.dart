@@ -33,15 +33,29 @@ class DoctorProfileRepository {
       if (email != null) data['email'] = email;
       if (ciudad != null) data['ciudad'] = ciudad;
 
+      // Usar el endpoint /me que requiere autenticación
+      // El token se agrega automáticamente por el interceptor de DioClient
       final response = await _dio.put(
-        '/doctors/profile/$userId',
+        '/me',
         data: data,
       );
       return response.data;
     } on DioException catch (e) {
-      throw Exception(
-        e.response?.data['message'] ?? 'Error al actualizar perfil',
-      );
+      // Log detallado del error
+      print('Error al actualizar perfil:');
+      print('Status code: ${e.response?.statusCode}');
+      print('Response data: ${e.response?.data}');
+      print('Error message: ${e.message}');
+      
+      String errorMessage = 'Error al actualizar perfil';
+      if (e.response?.data != null) {
+        if (e.response!.data is Map) {
+          errorMessage = e.response!.data['error'] ?? 
+                        e.response!.data['message'] ?? 
+                        errorMessage;
+        }
+      }
+      throw Exception(errorMessage);
     }
   }
 
