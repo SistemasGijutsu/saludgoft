@@ -137,4 +137,52 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(error: null);
     }
   }
+
+  // Actualizar información del usuario (nombre y/o email)
+  void updateUserInfo({String? nombre, String? email, String? ciudad}) {
+    if (state.user == null) return;
+
+    final updatedUser = UserData(
+      id: state.user!.id,
+      nombre: nombre ?? state.user!.nombre,
+      email: email ?? state.user!.email,
+      rol: state.user!.rol,
+      telefono: state.user!.telefono,
+      fechaNacimiento: state.user!.fechaNacimiento,
+      edad: state.user!.edad,
+      genero: state.user!.genero,
+      ciudad: ciudad ?? state.user!.ciudad,
+      direccion: state.user!.direccion,
+      fotoPerfil: state.user!.fotoPerfil,
+      estadoCuenta: state.user!.estadoCuenta,
+      activo: state.user!.activo,
+      fechaRegistro: state.user!.fechaRegistro,
+    );
+
+    state = state.copyWith(user: updatedUser);
+  }
+
+  // Actualizar foto de perfil
+  void updateUserPhoto(String photoUrl) {
+    if (state.user == null) return;
+
+    final updatedUser = UserData(
+      id: state.user!.id,
+      nombre: state.user!.nombre,
+      email: state.user!.email,
+      rol: state.user!.rol,
+      telefono: state.user!.telefono,
+      fechaNacimiento: state.user!.fechaNacimiento,
+      edad: state.user!.edad,
+      genero: state.user!.genero,
+      ciudad: state.user!.ciudad,
+      direccion: state.user!.direccion,
+      fotoPerfil: photoUrl,
+      estadoCuenta: state.user!.estadoCuenta,
+      activo: state.user!.activo,
+      fechaRegistro: state.user!.fechaRegistro,
+    );
+
+    state = state.copyWith(user: updatedUser);
+  }
 }

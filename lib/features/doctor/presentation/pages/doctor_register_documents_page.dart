@@ -241,7 +241,7 @@ class _DoctorRegisterDocumentsPageState extends ConsumerState<DoctorRegisterDocu
         password: registrationData.password!,
         especialidadId: registrationData.especialidad!.id,
         cedula: registrationData.dni!,
-        tarjetaProfesional: registrationData.dni!, // Por ahora usamos el mismo DNI
+        tarjetaProfesional: registrationData.tarjetaProfesionalNumero, // Puede ser null
         medioTransporte: registrationData.medioTransporte?.toLowerCase() ?? 'motocicleta',
         anosExperiencia: 1, // Valor por defecto
         tarifaConsulta: 50000, // Valor por defecto

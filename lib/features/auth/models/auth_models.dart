@@ -148,7 +148,7 @@ class DoctorRegisterRequest {
   final int especialidadId;
   final String cedula;
   @JsonKey(name: 'tarjeta_profesional')
-  final String tarjetaProfesional;
+  final String? tarjetaProfesional;
   @JsonKey(name: 'medio_transporte')
   final String medioTransporte;
   @JsonKey(name: 'anos_experiencia')
@@ -167,7 +167,7 @@ class DoctorRegisterRequest {
     required this.password,
     required this.especialidadId,
     required this.cedula,
-    required this.tarjetaProfesional,
+    this.tarjetaProfesional,
     required this.medioTransporte,
     required this.anosExperiencia,
     required this.tarifaConsulta,

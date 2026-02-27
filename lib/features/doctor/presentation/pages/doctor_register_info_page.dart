@@ -24,6 +24,7 @@ class _DoctorRegisterInfoPageState extends ConsumerState<DoctorRegisterInfoPage>
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _dniController = TextEditingController();
+  final _tarjetaProfesionalController = TextEditingController();
   final _ageController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
@@ -39,11 +40,146 @@ class _DoctorRegisterInfoPageState extends ConsumerState<DoctorRegisterInfoPage>
   void dispose() {
     _nameController.dispose();
     _dniController.dispose();
+    _tarjetaProfesionalController.dispose();
     _ageController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _showTermsAndConditions() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Container(
+          constraints: const BoxConstraints(maxHeight: 600),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: const BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Términos y Condiciones',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              ),
+              // Contenido
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _termsItem(
+                        'El médico acepta que ejerce su profesión de manera independiente y por su propia cuenta y riesgo.',
+                      ),
+                      _termsItem(
+                        'SaludGo es exclusivamente un portal de contacto. La plataforma no asume responsabilidad alguna por el acto médico, diagnósticos o tratamientos. El médico asume cualquier reclamación legal derivada de su ejercicio.',
+                      ),
+                      _termsItem(
+                        'El pago de la recarga otorga el derecho de uso de la herramienta tecnológica, no constituye una relación laboral ni un seguro de cobertura.',
+                      ),
+                      _termsItem(
+                        'El profesional debe verificar la identidad del paciente antes de brindar atención.',
+                      ),
+                      _termsItem(
+                        'El profesional acepta las políticas de privacidad y manejo de datos personales de SaludGo.',
+                      ),
+                      _termsItem(
+                        'SaludGo se reserva el derecho de suspender o cancelar cuentas que incumplan estos términos.',
+                      ),
+                      _termsItem(
+                        'Al registrarse, el profesional certifica que cuenta con todas las certificaciones, licencias y seguros necesarios para ejercer su profesión.',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Botón Entendido
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Entendido',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _termsItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '• ',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primary,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 14,
+                height: 1.5,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -179,7 +315,7 @@ class _DoctorRegisterInfoPageState extends ConsumerState<DoctorRegisterInfoPage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'DNI',
+                          'DNI / CÉDULA',
                           style: TextStyle(
                             fontSize: 12,
                             color: AppColors.primary,
@@ -250,6 +386,34 @@ class _DoctorRegisterInfoPageState extends ConsumerState<DoctorRegisterInfoPage>
                     ),
                   ),
                 ],
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Tarjeta Profesional (Opcional)
+              const Text(
+                'TARJETA PROFESIONAL (Opcional)',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _tarjetaProfesionalController,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  hintText: 'Ingrese su tarjeta profesional',
+                  helperText: 'Puede dejarlo vacío si aún no tiene',
+                  helperStyle: const TextStyle(fontSize: 10),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
               ),
               
               const SizedBox(height: 16),
@@ -451,7 +615,7 @@ class _DoctorRegisterInfoPageState extends ConsumerState<DoctorRegisterInfoPage>
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        // TODO: Mostrar términos y condiciones
+                        _showTermsAndConditions();
                       },
                       child: const Text(
                         'Acepto los términos y condiciones',
@@ -485,6 +649,9 @@ class _DoctorRegisterInfoPageState extends ConsumerState<DoctorRegisterInfoPage>
                               telefono: _phoneController.text,
                               ciudad: '',
                               medioTransporte: _selectedTransport,
+                              tarjetaProfesionalNumero: _tarjetaProfesionalController.text.trim().isEmpty 
+                                  ? null 
+                                  : _tarjetaProfesionalController.text.trim(),
                               fotoPerfil: _profileImage,
                             );
                             ref.read(doctorRegistrationProvider.notifier).setSpecialty(widget.specialty);

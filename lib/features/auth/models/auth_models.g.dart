@@ -113,7 +113,7 @@ DoctorRegisterRequest _$DoctorRegisterRequestFromJson(
       password: json['password'] as String,
       especialidadId: (json['especialidad_id'] as num).toInt(),
       cedula: json['cedula'] as String,
-      tarjetaProfesional: json['tarjeta_profesional'] as String,
+      tarjetaProfesional: json['tarjeta_profesional'] as String?,
       medioTransporte: json['medio_transporte'] as String,
       anosExperiencia: (json['anos_experiencia'] as num).toInt(),
       tarifaConsulta: (json['tarifa_consulta'] as num).toDouble(),

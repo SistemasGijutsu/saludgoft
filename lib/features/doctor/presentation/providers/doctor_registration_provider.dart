@@ -14,6 +14,7 @@ class DoctorRegistrationState {
   final String? telefono;
   final String? ciudad;
   final String? medioTransporte;
+  final String? tarjetaProfesionalNumero;
   final File? fotoPerfil;
   
   // Especialidad
@@ -41,6 +42,7 @@ class DoctorRegistrationState {
     this.telefono,
     this.ciudad,
     this.medioTransporte,
+    this.tarjetaProfesionalNumero,
     this.fotoPerfil,
     this.especialidad,
     this.documentoIdentidad,
@@ -63,6 +65,7 @@ class DoctorRegistrationState {
     String? telefono,
     String? ciudad,
     String? medioTransporte,
+    String? tarjetaProfesionalNumero,
     File? fotoPerfil,
     Specialty? especialidad,
     File? documentoIdentidad,
@@ -84,6 +87,7 @@ class DoctorRegistrationState {
       telefono: telefono ?? this.telefono,
       ciudad: ciudad ?? this.ciudad,
       medioTransporte: medioTransporte ?? this.medioTransporte,
+      tarjetaProfesionalNumero: tarjetaProfesionalNumero ?? this.tarjetaProfesionalNumero,
       fotoPerfil: fotoPerfil ?? this.fotoPerfil,
       especialidad: especialidad ?? this.especialidad,
       documentoIdentidad: documentoIdentidad ?? this.documentoIdentidad,
@@ -124,6 +128,7 @@ class DoctorRegistrationNotifier extends StateNotifier<DoctorRegistrationState> 
     required String telefono,
     required String ciudad,
     required String medioTransporte,
+    String? tarjetaProfesionalNumero,
     File? fotoPerfil,
   }) {
     state = state.copyWith(
@@ -136,6 +141,7 @@ class DoctorRegistrationNotifier extends StateNotifier<DoctorRegistrationState> 
       telefono: telefono,
       ciudad: ciudad,
       medioTransporte: medioTransporte,
+      tarjetaProfesionalNumero: tarjetaProfesionalNumero,
       fotoPerfil: fotoPerfil,
     );
   }

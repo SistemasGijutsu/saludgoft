@@ -23,4 +23,8 @@ class ApiConstants {
   // Common endpoints
   static const String specialties = '/specialties';
   static const String profile = '/me';
+  
+  // User/Profile endpoints
+  static const String updateProfilePhoto = '/usuarios'; // usuarios/{id} con PUT
+  static const String updateProfile = '/usuarios'; // usuarios/{id} con PUT
 }

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/doctor_availability_provider.dart';
+import 'doctor_profile_page.dart';
+import 'doctor_city_page.dart';
 
 class DoctorHomePage extends ConsumerStatefulWidget {
   const DoctorHomePage({super.key});
@@ -349,9 +351,30 @@ class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
 
   void _onMenuTap(BuildContext context, String name) {
     Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$name (próximamente)')),
-    );
+    
+    // Navegación según la opción seleccionada
+    switch (name) {
+      case 'Mi Perfil':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DoctorProfilePage(),
+          ),
+        );
+        break;
+      case 'Ciudad':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DoctorCityPage(),
+          ),
+        );
+        break;
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$name (próximamente)')),
+        );
+    }
   }
 
   Widget _menuItem({
