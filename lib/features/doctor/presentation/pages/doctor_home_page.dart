@@ -316,6 +316,11 @@ class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
                       onTap: () => _onMenuTap(context, 'Seguridad'),
                     ),
                     _menuItem(
+                      icon: Icons.settings_outlined,
+                      title: 'CONFIGURACIÓN',
+                      onTap: () => _onMenuTap(context, 'Configuración'),
+                    ),
+                    _menuItem(
                       icon: Icons.warning_amber_outlined,
                       title: 'NECESITO AYUDA',
                       onTap: () => _onMenuTap(context, 'Necesito ayuda'),
