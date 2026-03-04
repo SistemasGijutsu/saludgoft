@@ -6,6 +6,7 @@ import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/doctor_availability_provider.dart';
 import 'doctor_profile_page.dart';
 import 'doctor_city_page.dart';
+import 'doctor_settings_page.dart';
 
 class DoctorHomePage extends ConsumerStatefulWidget {
   const DoctorHomePage({super.key});
@@ -367,6 +368,15 @@ class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
           context,
           MaterialPageRoute(
             builder: (context) => const DoctorCityPage(),
+          ),
+        );
+        break;
+      case 'Seguridad':
+      case 'Configuración':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DoctorSettingsPage(),
           ),
         );
         break;
